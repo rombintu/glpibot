@@ -1,16 +1,27 @@
 from fastapi import FastAPI, Request
-import json
+from lib.helper import TriggerDataModel
+from lib.logger import logging as log
+
+from telegram import api as tgapi
 
 app = FastAPI()
 
 @app.post("/webhook")
 async def webhook_handler(request: Request):
-    data = await request.json()
-    # Сохраняем данные в файл
-    with open("received_data.json", "w") as file:
-        json.dump(data, file, indent=4)
+    valid_data = None
+    try:
+        data = await request.json()
+        valid_data = TriggerDataModel(**data)
+    except Exception as err:
+        log.error(err)
+        return
     
-    return {"message": "Data received and saved successfully"}
+    try:
+        await tgapi.simple_send_message(tgapi.chid, str(valid_data))
+        return {"message": "Data received"}
+    except Exception as err:
+        log.error(err)
+        return
 
 
 def start(addr = "0.0.0.0", port = 8080):
