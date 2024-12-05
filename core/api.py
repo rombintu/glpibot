@@ -1,7 +1,7 @@
 import glpi_api
 from lib.logger import logging as log
 from lib.helper import item_types, SlaOrigin, TicketOrigin, CategoryOrigin
-from lib.helper import seconds2time
+from lib.helper import seconds2time, extract_text_from_html
 from lib.helper import status2str
 import json
 
@@ -66,6 +66,8 @@ class API:
             # Общая информация
             ticket_report["Номер заявки"] = ticket.id
             ticket_report["Категория"] = categories.get(ticket.itilcategories_id).name if ticket.itilcategories_id else "Без категории"
+            ticket_report["Тема"] = ticket.name
+            # ticket_report["Сообщение"] = extract_text_from_html(ticket.content)
             ticket_report["Дата создания"] = ticket.date_creation
             ticket_report["Дата решения"] = ticket.solvedate
             ticket_report["Дата закрытия"] = ticket.closedate if ticket.closedate else "-"

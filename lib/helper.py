@@ -2,6 +2,7 @@ import json
 from pydantic import BaseModel
 from typing import Optional
 # from dataclasses import dataclass
+# from bs4 import BeautifulSoup as bs
 
 class item_types:
     ticket = "Ticket"
@@ -19,6 +20,7 @@ class TicketModel(BaseModel):
     time: TicketTimeModel
     url: Optional[str] = None
     urlapprove: Optional[str] = None
+    author_email: Optional[str] = None
     status: Optional[str] = None
     urgency: Optional[str] = None
     impact: Optional[str] = None
@@ -38,23 +40,14 @@ class TriggerDataModel(BaseModel):
     ticket: TicketModel
 
     def __str__(self) -> str:
-        return f"""Тикет {self.ticket.id} {pretty_status(self.ticket.status)})
-    --- Информация ---
+        return f"""Тикет {self.ticket.id} {pretty_status(self.ticket.status)}
 👨‍💻 {self.ticket.authors}
-📪 Почта
-🔬 {self.ticket.category}
+📪 {self.ticket.author_email}
+🔬 {self.ticket.category if self.ticket.category else "Категория не выбрана"}
+🚀 {self.ticket.priority} приоритет
 
-{self.ticket.title}
-Приоритет: {self.ticket.priority}"""
-
-def json2pretty(data):
-    s = json.dumps(data, ensure_ascii=False, indent=4)
-    return f"""Новая заявка
-```json
-{data}
-```
+**{self.ticket.title}**
 """
-
 
 class CategoryOrigin(BaseModel):
     id: int
@@ -66,6 +59,8 @@ def json2str(jsdata):
 class TicketOrigin(BaseModel):
     id: int = None
     date_creation: str = None
+    name: Optional[str] = None
+    content: Optional[str] = None
     solvedate: Optional[str]
     closedate: Optional[str] = None
     status: Optional[int] = None
@@ -132,3 +127,12 @@ def status2str(status: int):
         case 5: s = "Решена"
         case 6: s = "Закрыта"
     return s
+
+# def extract_text_from_html(html_content):
+#     # Создаем объект BeautifulSoup с парсером lxml
+#     soup = bs(html_content, 'lxml')
+    
+#     # Извлекаем текст без тегов
+#     text = soup.get_text(separator='\n')
+    
+#     return text 

@@ -28,4 +28,4 @@ async def handle_command_stats(message: types.Message):
     stop_report_time = time.time()
     await message.answer_document(
         types.input_file.FSInputFile(REPORT_FILE_PATH, filename=REPORT_FILE_PATH),
-        caption=f"Отчет подготовлен за {round(stop_report_time-start_report_time, 2)} сек.")
+        caption=f"Отчет готов за {round(stop_report_time-start_report_time, 2)} сек.")
