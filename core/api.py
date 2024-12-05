@@ -1,7 +1,7 @@
 import glpi_api
 from lib.logger import logging as log
 from lib.helper import item_types, SlaOrigin, TicketOrigin, CategoryOrigin
-from lib.helper import seconds2time, extract_text_from_html
+from lib.helper import seconds2time
 from lib.helper import status2str
 import json
 
