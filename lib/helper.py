@@ -42,11 +42,10 @@ class TriggerDataModel(BaseModel):
     def __str__(self) -> str:
         return f"""Тикет {self.ticket.id} {pretty_status(self.ticket.status)}
 👨‍💻 {self.ticket.authors}
-📪 {self.ticket.author_email}
 🔬 {self.ticket.category if self.ticket.category else "Категория не выбрана"}
 🚀 {self.ticket.priority} приоритет
 
-**{self.ticket.title}**
+{self.ticket.title}
 """
 
 class CategoryOrigin(BaseModel):
