@@ -27,3 +27,10 @@ async def webhook_handler(request: Request):
 def start(addr = "0.0.0.0", port = 8080):
     import uvicorn
     uvicorn.run(app, host=addr, port=port)
+
+async def start_async():
+    from uvicorn import Server, Config
+    config = Config(app, host="0.0.0.0", port=8080)
+    server = Server(config)
+    await server.serve()
+

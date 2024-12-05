@@ -1,10 +1,10 @@
-from os import getenv
-from core.api import API
-from dotenv import load_dotenv
-load_dotenv()
-
 from lib.logger import logging as log
-from core import server
+import asyncio
+from telegram import api
+
 
 if __name__ == "__main__":
-    server.start()
+    log.info("Service TELEGRAM BOT is starting...")
+    asyncio.run(api.start_bot_async(), debug=False)
+
+
