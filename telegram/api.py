@@ -1,7 +1,6 @@
 import asyncio, os, sys
 from aiogram import Bot, Dispatcher, types
 from lib.logger import logging as log
-# from aiogram.enums.parse_mode import ParseMode as pm
 from telegram.routes import report
 from aiogram.client.bot import DefaultBotProperties
 from dotenv import load_dotenv
@@ -20,8 +19,15 @@ bot = Bot(token, default=DefaultBotProperties(link_preview_is_disabled=True))
 dp = Dispatcher()
 dp.include_router(report.router)
 
-async def simple_send_message(chid: int | str, content: str):
+async def send_message(chid: int | str, content: str):
     await bot.send_message(chid, content)
+
+async def send_message_with_btns(chid: int | str, content: str, btns=None):
+    if not btns:
+        await bot.send_message(chid, content)
+    else:
+
+        await bot.send_message(chid, content, reply_markup = btns)
 
 async def setup_bot_commands():
     bot_commands = [

@@ -1,8 +1,6 @@
 import json
 from pydantic import BaseModel
 from typing import Optional
-# from dataclasses import dataclass
-# from bs4 import BeautifulSoup as bs
 
 class item_types:
     ticket = "Ticket"
@@ -20,13 +18,15 @@ class TicketModel(BaseModel):
     time: TicketTimeModel
     url: Optional[str] = None
     urlapprove: Optional[str] = None
-    author_email: Optional[str] = None
+    author: Optional[str] = None
     status: Optional[str] = None
     urgency: Optional[str] = None
     impact: Optional[str] = None
     priority: Optional[str] = None
     category: Optional[str] = None
     authors: Optional[str] = None
+    assigntouser: Optional[str] = None
+    duedate: Optional[str] = None
     content: Optional[str] = None
 
 
@@ -34,16 +34,24 @@ def pretty_status(status: str):
     match status:
         case "Новая":
             return f"🟢"
-    return f"🔵"
+        case "В работе (назначена)":
+            return f"🔵"
+    return f"⚪️"
+
+def if_not_empty(content, value, default=""):
+    return content if value else default
 
 class TriggerDataModel(BaseModel):
     ticket: TicketModel
 
     def __str__(self) -> str:
         return f"""Тикет {self.ticket.id} {pretty_status(self.ticket.status)}
-👨‍💻 {self.ticket.authors}
-🔬 {self.ticket.category if self.ticket.category else "Категория не выбрана"}
+👨‍💻 {self.ticket.author}
+{if_not_empty(f"🔬 {self.ticket.category}", self.ticket.category, f"🔬 Без категории")}
 🚀 {self.ticket.priority} приоритет
+🗓 {self.ticket.time.open}
+{if_not_empty(f"♻️ {self.ticket.duedate} [SLA]", self.ticket.duedate, "♻️ - [SLA]")}
+{if_not_empty(f"🛠 {self.ticket.assigntouser}", self.ticket.assigntouser, f"🛠 Не назначена")}
 
 {self.ticket.title}
 """

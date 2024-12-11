@@ -17,7 +17,8 @@ async def handle_command_stats(message: types.Message):
     app_token = getenv("APP_TOKEN")
     user_token = getenv("USER_TOKEN")
     url = getenv("SERVICE_URL")
-    api = API(url=url, app_token=app_token, user_token=user_token)
+    api_endpoint = getenv("API_ENDPOINT")
+    api = API(url=url+api_endpoint, app_token=app_token, user_token=user_token)
 
     tickets = api.get_tickets()
     slas = api.get_slas()
