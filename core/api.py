@@ -1,6 +1,8 @@
 import glpi_api
 from lib.logger import logging as log
-from lib.helper import item_types, SlaOrigin, TicketOrigin, CategoryOrigin
+from lib.helper import item_types, SlaOrigin, CategoryOrigin
+from lib.models.ticket import TicketOrigin
+from lib.models.user import UserOrigin
 from lib.helper import seconds2time
 from lib.helper import status2str
 
@@ -43,7 +45,12 @@ class API:
                 continue
             tickets.append(TicketOrigin(**t))
         return tickets
-    
+
+    def get_user(self, user_id: int):
+        user_json = self.get_item(item_types.user, user_id)
+        if user_json:
+            return UserOrigin(**user_json)
+
     def get_categories(self):
         categories_json = self.get_items(item_types.category)
         categories = {}
@@ -91,3 +98,14 @@ class API:
             report.append(ticket_report)
 
         return report
+    
+    def add_items(self, item_type: str, *items: any):
+        try:
+            with glpi_api.connect(self.url, self.app_token, self.user_token, verify_certs=False) as glpi:
+                return glpi.add(item_type, *items)
+        except glpi_api.GLPIError as err:
+            log.error(str(err))
+            return []
+        
+    def create_ticket(self, ticket: dict):
+        return self.add_items(item_types.ticket, (ticket))

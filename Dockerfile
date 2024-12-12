@@ -1,6 +1,11 @@
 # Используем базовый образ Alpine с Python 3.12
 FROM python:3.12-alpine
 
+# Устанавливаем временную зону Europe/Moscow
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime && \
+    echo "Europe/Moscow" > /etc/timezone
+    
 # Устанавливаем Poetry
 RUN pip install poetry
 

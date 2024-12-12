@@ -7,6 +7,7 @@ class item_types:
     slm = "Slm"
     sla = "SLA"
     category = "ITILCategory"
+    user = "User"
 
 class TicketTimeModel(BaseModel):
     open: Optional[str] = None
@@ -62,25 +63,6 @@ class CategoryOrigin(BaseModel):
 
 def json2str(jsdata):
     return json.dumps(jsdata, indent=4, ensure_ascii=False)
-
-class TicketOrigin(BaseModel):
-    id: int = None
-    date_creation: str = None
-    name: Optional[str] = None
-    content: Optional[str] = None
-    solvedate: Optional[str]
-    closedate: Optional[str] = None
-    status: Optional[int] = None
-    priority: int = None
-    slas_id_ttr: Optional[int] = None
-    slas_id_tto: Optional[int] = None
-    waiting_duration: Optional[int] = None
-    sla_waiting_duration: Optional[int] = None
-    close_delay_stat: Optional[int] = None
-    solve_delay_stat: Optional[int] = None
-    takeintoaccount_delay_stat: Optional[int] = None
-    itilcategories_id: Optional[int] = None
-
 
 
 class SlaOrigin(BaseModel):
