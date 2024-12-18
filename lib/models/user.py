@@ -17,3 +17,6 @@ class UserOrigin(BaseModel):
     
     def get_email_atconsulting(self):
         return self.name + EMAIL_SUFFIX_ATCONSULTING
+    
+class UserStorage(UserOrigin):
+    telegram_id: Optional[int] = None

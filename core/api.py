@@ -5,7 +5,6 @@ from lib.models.ticket import TicketOrigin
 from lib.models.user import UserOrigin
 from lib.helper import seconds2time
 from lib.helper import status2str
-
 class API:
     version = None
 
@@ -26,6 +25,14 @@ class API:
         try:
             with glpi_api.connect(self.url, self.app_token, self.user_token, verify_certs=False) as glpi:
                 return glpi.get_item(item_type, item_id, **kw)
+        except glpi_api.GLPIError as err:
+            log.error(str(err))
+            return []
+        
+    def search_item(self, item_type, **kw):
+        try:
+            with glpi_api.connect(self.url, self.app_token, self.user_token, verify_certs=False) as glpi:
+                return glpi.search(item_type, **kw)
         except glpi_api.GLPIError as err:
             log.error(str(err))
             return []
@@ -50,6 +57,14 @@ class API:
         user_json = self.get_item(item_types.user, user_id)
         if user_json:
             return UserOrigin(**user_json)
+        return None
+    
+    def get_users(self):
+        user_json = self.get_items(item_types.user)
+        users = []
+        for u in user_json:
+            users.append(UserOrigin(**u))
+        return users
 
     def get_categories(self):
         categories_json = self.get_items(item_types.category)
@@ -109,3 +124,14 @@ class API:
         
     def create_ticket(self, ticket: dict):
         return self.add_items(item_types.ticket, (ticket))
+
+from os import getenv
+from dotenv import load_dotenv
+
+load_dotenv()
+
+app_token = getenv("APP_TOKEN")
+user_token = getenv("USER_TOKEN")
+url = getenv("SERVICE_URL")
+api_endpoint = getenv("API_ENDPOINT")
+api = API(url=url+api_endpoint, app_token=app_token, user_token=user_token)
