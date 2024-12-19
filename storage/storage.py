@@ -11,6 +11,8 @@ class InMemStorage:
         self.path = path
         self.load()
 
+        log.debug(self.users)
+
     def save(self):
         with open(self.path, "w") as f:
             yaml.safe_dump(self.users, f)
@@ -32,3 +34,5 @@ class InMemStorage:
             return UserStorage(**user)
         else:
             return None
+        
+storage = InMemStorage()

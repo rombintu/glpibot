@@ -3,6 +3,7 @@ from aiogram import Bot, Dispatcher, types
 from lib.logger import logging as log
 from telegram.routes import report
 from telegram.routes import users
+from telegram.routes import tickets
 from aiogram.client.bot import DefaultBotProperties
 
 from dotenv import load_dotenv
@@ -21,6 +22,7 @@ bot = Bot(token, default=DefaultBotProperties(link_preview_is_disabled=True))
 dp = Dispatcher()
 dp.include_router(report.router)
 dp.include_router(users.router)
+dp.include_router(tickets.router)
 
 
 
