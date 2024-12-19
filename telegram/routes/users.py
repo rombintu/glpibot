@@ -10,32 +10,48 @@ from random import randint
 from lib.models.user import EMAIL_SUFFIX_ATCONSULTING, UserStorage, UserOrigin
 from telegram.keyboards import user as kbuser
 from lib.helper import isEnglish
+from storage.storage import storage
 
 router = Router()
-storage = InMemStorage()
+# storage = InMemStorage()
 
 def isreg(func):
-    async def wrapper(message: types.Message):
+    async def wrapper(message: types.Message, state: FSMContext):
         if storage.get_user(message.chat.id):
-            await func(message)
+            await func(message, state)
         else:
             await message.answer("Пройдите авторизацию /auth")
     return wrapper
 
+def isgroup(func):
+    async def wrapper(message: types.Message, state: FSMContext):
+        if message.chat.id < 0:
+            await message.answer("Данный чат является группой или беседой")
+        else:
+            await func(message, state)
+    return wrapper
+
 @router.message(Command('auth'))
+@isgroup
 async def handle_command_auth(message: types.Message, state: FSMContext):
     await state.set_state(Auth.login)
-    await message.answer("Для авторизации введите логин от учетной записи Phoenixit")
+    await message.answer("Для авторизации введите логин от учетной записи Phoenixit\n/cancel - Отмена")
 
 
 @router.message(Command('profile'))
+@isgroup
 @isreg
-async def handle_command_profile(message: types.Message):
+async def handle_command_profile(message: types.Message, state: FSMContext):
     user = storage.get_user(message.chat.id)
     await message.answer(f"""👨‍💻 <b>{user.realname} {user.firstname}</b>
 📨 {user.get_email_atconsulting()}
 🆔 <code>{user.telegram_id}</code> ☎️ {user.phone}""", 
-parse_mode=ParseMode.HTML, reply_markup=kbuser.user_config(message.chat.id))
+parse_mode=ParseMode.HTML, reply_markup=kbuser.user_config())
+
+
+@router.message(Command('id'))
+async def handle_command_id(message: types.Message):
+    await message.answer(f"ID: <code>{message.chat.id}</code>", parse_mode=ParseMode.HTML)
 
 
 class Auth(StatesGroup):
