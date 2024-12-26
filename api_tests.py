@@ -15,11 +15,12 @@ api = API(url=url+api_endpint, app_token=app_token, user_token=user_token)
 class TestApi(unittest.TestCase):
     def test_create_ticket(self):
         ticket = TicketOrigin(
-            id=200, name="TEST1", content="ticket from testing", status=1, 
+            name="TEST11", content="ticket from testing", status=1, 
             priority=3, waiting_duration=0, close_delay_stat=0,
-            solve_delay_stat=0, takeintoaccount_delay_stat=0, users_id_recipient=8,
+            solve_delay_stat=0, takeintoaccount_delay_stat=0,
             sla_waiting_duration=0,
             )
+        ticket.set_author_id(8)
         payload = api.create_ticket(ticket.model_dump())
         log.debug(payload)
 
