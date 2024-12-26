@@ -1,9 +1,8 @@
-from aiogram import Router, F, types
+from aiogram import Router, types
 from aiogram.filters.command import Command
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from aiogram.enums.parse_mode import ParseMode
-from storage.storage import InMemStorage
 from core.postapi import postapi
 from core.api import api
 from random import randint
@@ -13,7 +12,6 @@ from lib.helper import isEnglish
 from storage.storage import storage
 
 router = Router()
-# storage = InMemStorage()
 
 def isreg(func):
     async def wrapper(message: types.Message, state: FSMContext):

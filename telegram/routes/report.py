@@ -1,6 +1,5 @@
-from aiogram import Router, F, types
+from aiogram import Router, types
 from aiogram.filters.command import Command
-# from aiogram.fsm.context import FSMContext
 from core.api import api
 from lib.helper import new_report_file
 from os import getenv
