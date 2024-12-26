@@ -124,4 +124,12 @@ def status2str(status: int):
 #     # Извлекаем текст без тегов
 #     text = soup.get_text(separator='\n')
     
-#     return text 
+#     return text \
+
+def isEnglish(s: str):
+    try:
+        s.encode(encoding='utf-8').decode('ascii')
+    except UnicodeDecodeError:
+        return False
+    else:
+        return True

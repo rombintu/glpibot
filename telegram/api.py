@@ -2,7 +2,10 @@ import asyncio, os, sys
 from aiogram import Bot, Dispatcher, types
 from lib.logger import logging as log
 from telegram.routes import report
+from telegram.routes import users
+from telegram.routes import tickets
 from aiogram.client.bot import DefaultBotProperties
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -18,6 +21,10 @@ else:
 bot = Bot(token, default=DefaultBotProperties(link_preview_is_disabled=True))
 dp = Dispatcher()
 dp.include_router(report.router)
+dp.include_router(users.router)
+dp.include_router(tickets.router)
+
+
 
 async def send_message(chid: int | str, content: str):
     await bot.send_message(chid, content)
@@ -31,7 +38,8 @@ async def send_message_with_btns(chid: int | str, content: str, btns=None):
 
 async def setup_bot_commands():
     bot_commands = [
-        types.BotCommand(command="/report", description="SLA Выгрузить отчет"),       
+        types.BotCommand(command="/profile", description="Личный кабинет"),  
+        types.BotCommand(command="/report", description="SLA Выгрузить отчет"),
     ]
     await bot.set_my_commands(bot_commands)
 
